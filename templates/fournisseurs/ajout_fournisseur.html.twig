@@ -1,0 +1,21 @@
+
+{% extends 'base.html.twig' %}
+
+    {% block title %}
+        Ajout fournisseur 
+    {% endblock %}
+
+    {% block body %}
+    <h1  class=" text-aligne text-center"> Ajout fournisseur </h1>
+
+    {{ form_start(form) }}
+        <div class ="mx-auto container  ml-5">
+    
+    {{ form_widget(form) }}
+
+        <button class="btn btn-primary  mt-4">{{ ' Ajout fournisseur ' }}</button>
+        </div>
+    
+    {{ form_end(form) }}
+
+{% endblock %}

@@ -1,0 +1,50 @@
+{% extends 'base.html.twig' %}
+
+
+{% block body %}
+    <h1 class="text-center"> Liste des fournisseurs </h1>
+
+    <a href="/fournisseurs/ajout"> <button  class="btn btn-success m-3" type="submit"> <i class="bi bi-plus-square"></i> Ajout fournisseur</button></a>
+
+    <table class="border=1 w-75 mx-auto table table-dark table-striped-columns">
+        <tr>
+            <th> Code fournisseur </th>
+            <th> Raison sociale </th>
+            <th> Rue fournisseur </th>
+            <th> Code postal </th>
+            <th> Localité </th>
+            <th> Pays </th>
+            <th> Téléphone </th>
+            <th> URL </th>
+            <th> Email</th>
+            <th> Fax </th>
+            <th >Action </th>   
+
+        </tr>
+
+        {% for fournisseur in fournisseurs %}
+            <tr>
+                <td>{{ fournisseur.codefournisseur }}</td>
+                <td>{{ fournisseur.raisonsociale }}</td>
+                <td>{{ fournisseur.ruefournisseur }}</td>  
+                <td>{{ fournisseur.codepostal }}</td>  
+                <td>{{ fournisseur.localite }}</td>  
+                <td>{{ fournisseur.pays }}</td>  
+                <td>{{ fournisseur.telfournisseur }}</td>  
+                <td>{{ fournisseur.urlfournisseur }}</td>  
+                <td>{{ fournisseur.emailfournisseur }}</td>  
+                <td>{{ fournisseur.faxfournisseur }}</td>  
+    
+            
+                <td>
+                <div class="d-flex">
+                    <a href="{{ path ('update_fournisseur', {'id':fournisseur.id}) }}"><i class="bi bi-pencil-square btn btn-warning mx-2"></i></a>
+                    <a href="{{ path ('delete_fournisseur', {'id':fournisseur.id}) }}" onclick="return confirm('Etes-vous sûr de vouloir supprimer ce livre?')"><i class="bi bi-trash btn btn-danger"></i></a>
+                </div>
+                </td>
+            </tr>
+        {% endfor %}
+
+
+    </table>
+{% endblock %}

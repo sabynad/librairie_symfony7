@@ -1,3 +1,41 @@
+* {
+    box-sizing: border-box;
+}
+
 body {
-    background-color: skyblue;
+    width: 100%;
+    /* background-color: grey;
+    background-image: url('/assets/img-librairie'); */
+}
+
+.main-container{
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    background-image: url('/img/librairie.jpg');
+    justify-content: center;
+    align-items: center;
+}
+
+header {
+    order: -1;
+    width: 100%;
+}
+
+main{
+    width: 80%;
+    min-height: 80vh;
+}
+
+h1{
+    color: white;
+}
+
+footer {
+    width: 100%;
+    text-align: center;
+    margin-top: auto;
+    padding: 2rem;
+    color: white;
+    background-color: rgba(80, 78, 78, 0.829);
 }
