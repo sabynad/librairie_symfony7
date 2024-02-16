@@ -27,7 +27,15 @@ main{
     min-height: 80vh;
 }
 
+.nav-link{
+    font-size: 1.5rem;
+}
+
 h1{
+    color: white;
+}
+
+.required{
     color: white;
 }
 

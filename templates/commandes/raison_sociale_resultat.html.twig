@@ -1,0 +1,30 @@
+{% extends 'base.html.twig' %}
+
+
+{% block body %}
+    <h1 class="text-center"> Liste nom des fournisseurs </h1>
+
+    <table class="border=1 w-75 mx-auto table table-dark table-striped-columns">
+        <tr>
+            <th> Livre </th>
+            <th> Fournisseur </th>
+            <th> Date d'achat </th>
+            <th> Prix d'achat </th>
+            <th> Nbr d'exemplaires </th>
+            {# <th> Utilisateur </th> #}
+        </tr>
+
+        {% for commande in commandes %}
+            <tr>
+                <td>{{ commande.idlivre.TitreLivre }}</td>
+                <td>{{ commande.idfournisseur.raisonsociale }}</td>
+                <td>{{ commande.dateachat }}</td>  
+                <td>{{ commande.prixachat }}</td>  
+                <td>{{ commande.nbrexemplaires }}</td>  
+                {# <td>{{ commande.idutilisateur }}</td>   #}
+            </tr>
+        {% endfor %}
+
+
+    </table>
+{% endblock %}

@@ -10,19 +10,45 @@
                 <li class="nav-item active">
                     <a class="nav-link" href="/">Home</span></a>
                 </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="/livres">Livres</a>
+
+                {# livre #}
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                    Livres
+                    </a>
+                    <ul class="dropdown-menu">
+                        <li><a class="dropdown-item" href="/livres">Tous les livres</a></li>
+                        <li><a class="dropdown-item" href="/livres/titre">Livres par titre</a></li>
+                        <li><a class="dropdown-item" href="/livres/editeur">Livres par éditeur</a></li>
+                    </ul>
                 </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="/fournisseurs">Fournisseurs</a>
+
+                {# fournisseur #}
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">Fournisseurs</a>
+                    <ul class="dropdown-menu">
+                        <li><a class="dropdown-item" href="/fournisseurs">Tous les fournisseurs</a></li>
+                        <li><a class="dropdown-item" href="/fournisseurs/raisonsociale">Nom des fournisseurs</a></li>
+                        <li><a class="dropdown-item" href="/fournisseurs/Localite">fournisseurs par localité</a></li>
+                        <li><a class="dropdown-item" href="/fournisseurs/Pays">fournisseurs par Pays</a></li>
+                    </ul>
                 </li>
+
+                {# utilisateur #}
                 <li class="nav-item">
-                    <a class="nav-link" href="/utilisateur">Utilisateurs</a>
+                    <a class="nav-link" href="">Utilisateurs</a>
                 </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="/commandes">Commandes</a>
-                </li>
-                
+
+                {# commande #}
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">Commandes</a>
+                    <ul class="dropdown-menu">
+                        <li><a class="dropdown-item" href="/commandes">Toutes les commandes</a></li>
+                        <li><a class="dropdown-item" href="/commandes/raisonsociale">Nom des fournisseurs</a></li>
+                        <li><a class="dropdown-item" href="/commandes/Date">Date</a></li>
+                        <li><a class="dropdown-item" href="/commandes/Editeur">Editeur</a></li>
+                    </ul>
+                </li>           
             </ul>
         </div>
     </nav>

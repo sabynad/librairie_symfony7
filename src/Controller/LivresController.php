@@ -7,9 +7,12 @@ use App\Form\LivresType;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-use App\Repository\LivresRepository;
-use Doctrine\ORM\EntityManagerInterface;
+use App\Repository\LivresRepository;      //accès aux données des livres.
+use Doctrine\ORM\EntityManagerInterface;  // conserve les modifications
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;  // Cela signifie que vous pouvez utiliser `ChoiceType` dans votre fichier sans avoir à spécifier le chemin complet vers la classe à chaque fois que vous en avez besoin.
+use App\Form\LivresTitreType;
+use App\Form\LivresEditeurType;
 
 class LivresController extends AbstractController
 {
@@ -84,7 +87,7 @@ class LivresController extends AbstractController
     //delete livre 
     //--------------
     #[Route('/livres/{id}/delete', name: 'delete_livre')]
-        public function delete_livre( int $id, EntityManagerInterface $entityManager,  LivresRepository $livresRepository ): Response
+        public function delete_livre( int $id, EntityManagerInterface $entityManager,  LivresRepository $livresRepository): Response
         {
             $livre = $livresRepository->find($id);  //récupère le livre à partir de l'Id
             var_dump($livre);
@@ -96,4 +99,90 @@ class LivresController extends AbstractController
 
 
 
+    // Selection livre par titre
+    // --------------------------
+
+
+    // #[Route('/livrespartitre', name: 'livres_par_titre', methods: ['GET', 'POST'])]
+    // public function livres_par_titre(Request $request, LivresRepository $livresRepository, EntityManagerInterface $entityManager): Response
+    // {
+        // $livres = $livresRepository->findAll();
+        // $form = $this->createFormBuilder()
+        //         ->add('Titre', ChoiceType::class, [
+        //             'choices' => $livres, 
+        //             'choice_label' => 'titreLivre',
+        //             'choice_value' => 'id',
+        //             'placeholder' => 'Choisir un titre', 
+        //             'required' => false, 
+        //         ])
+        //         ->getForm();
+        // $form->handleRequest($request);
+                
+        // if ($form->isSubmitted() && $form->isValid()) {
+        //     $livreSelection = $form->get('Titre')->getData();
+        //     $livreId = $livreSelection->getId();
+        //     return $this->render('livres/select_livre_titre.html.twig', [
+        //         'livre' => $livresRepository->find($livreId),
+        //     ]);
+        // }
+        // return $this->render('livres/resultat_livre_titre.html.twig', [
+        //     'form' => $form->createView(),
+        // ]);
+
+
+        #[Route('/livres/titre', name: 'livres_Titre', methods: ['GET','POST'])]
+            public function form_livre_Titre(Request $request, LivresRepository $LivresRepo, EntityManagerInterface $entityManager) : Response
+        {
+        
+            $form = $this->createForm(LivresTitreType::class, null);
+
+            $form->handleRequest($request);
+
+            if ($form->isSubmitted() && $form->isValid()) {
+                $titreSelectionne = $form->get('titrelivre')->getData();
+                
+                
+            return $this->render('livres/resultat_livre_titre.html.twig',[   // le twig ou on affiche les resultats du titre selectionner
+                            
+            'livres' =>$LivresRepo->findBy(['titre_livre'=> $titreSelectionne]), 
+            // Titre_livre meme écris dans l'entité livres
+            ]);
+            }
+
+            return $this->render('livres/livres_titre.html.twig', [
+                'form' => $form->createView(),
+            ]);
+        }
+
+    // livre par editeur
+    //--------------------
+         
+    #[Route('/livres/editeur', name: 'livres_editeur', methods: ['GET','POST'])]
+    public function form_livre_editeur(Request $request, LivresRepository $LivresRepo, EntityManagerInterface $entityManager) : Response
+    {
+
+    $form = $this->createForm(LivresEditeurType::class, null);
+
+    $form->handleRequest($request);
+
+    if ($form->isSubmitted() && $form->isValid()) {
+        $editeurSelectionne = $form->get('editeur')->getData();
+        
+            
+        return $this->render('livres/resultat_livre_editeur.html.twig',[   // le twig ou on affiche les resultats du titre selectionner
+                        
+        'livres' =>$LivresRepo->findBy(['editeur'=> $editeurSelectionne]), 
+        // editeur_livre meme écris dans l'entité livres
+        ]);
+        }
+
+        return $this->render('livres/livres_editeur.html.twig', [
+            'form' => $form->createView(),
+        ]);
+    }
+
+
 }
+
+
+

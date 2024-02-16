@@ -10,14 +10,19 @@ use App\Repository\FournisseursRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use App\Form\FournisseursType;
+use App\Form\FournisseursSocialeType;
+use App\Form\FournisseursLocaliteType;
+use App\Form\FournisseursPaysType;
 
+  
+  #[Route('/fournisseurs')]
 class FournisseursController extends AbstractController
 
 {
 
     //afficher tout les fournisseurs
     //-------------------------------
-    #[Route('/fournisseurs', name: 'app_fournisseurs',methods:['GET'])]
+    #[Route('/', name: 'app_fournisseurs',methods:['GET'])]
     public function index(FournisseursRepository $fournisseursRepository): Response
     {
         return $this->render('fournisseurs/all_fournisseurs.html.twig', [
@@ -47,7 +52,7 @@ class FournisseursController extends AbstractController
 
     //Ajout fournisseur
     //------------------
-    #[Route('/fournisseurs/ajout', name: 'ajout_fournisseur', methods:['GET', 'POST'])]
+    #[Route('/ajout', name: 'ajout_fournisseur', methods:['GET', 'POST'])]
     public function ajout_fournisseur(Request $request, EntityManagerInterface $entityManager,  FournisseursRepository $fournisseursRepository ): Response
         {
             
@@ -82,5 +87,84 @@ class FournisseursController extends AbstractController
         return $this->redirectToRoute('app_fournisseurs');
     }
 
+    // fournisseur par raison sociale
+    //-------------------------------
+    #[Route('/raisonsociale', name: 'raison_sociale', methods: ['GET','POST'])]
+    public function raison_sociale(Request $request, FournisseursRepository $FournisseursRepo, EntityManagerInterface $entityManager) : Response
+    {
+
+    $form = $this->createForm(FournisseursSocialeType::class, null);
+
+    $form->handleRequest($request);
+
+    if ($form->isSubmitted() && $form->isValid()) {
+        $raisonSocialeSelectionne = $form->get('raisonsociale')->getData(); // raisonsociale même nom que dans le formulaire builder
+        
+            
+        return $this->render('fournisseurs/raison_sociale_resultat.html.twig',[   // le twig ou on affiche les resultats du titre selectionner
+                        
+        'fournisseurs' =>$FournisseursRepo->findBy(['Raison_sociale'=> $raisonSocialeSelectionne]), 
+        // Raison_sociale meme écris dans l'entité fournsiseurs
+        ]);
+        }
+
+        return $this->render('fournisseurs/raison_sociale.html.twig', [
+            'form' => $form->createView(),
+        ]);
+    }
+
+
+    // fournisseur par localité
+    //-------------------------------
+    #[Route('/Localite', name: 'localite', methods: ['GET','POST'])]
+    public function localite(Request $request, FournisseursRepository $FournisseursRepo, EntityManagerInterface $entityManager) : Response
+    {
+
+    $form = $this->createForm(FournisseursLocaliteType::class, null);
+
+    $form->handleRequest($request);
+
+    if ($form->isSubmitted() && $form->isValid()) {
+        $localiteSelectionne = $form->get('localite')->getData(); // localite même nom que dans le formulaire builder
+        
+            
+        return $this->render('fournisseurs/localite_resultat.html.twig',[   // le twig ou on affiche les resultats du titre selectionner
+                        
+        'fournisseurs' =>$FournisseursRepo->findBy(['Localite'=> $localiteSelectionne]), 
+        // localite meme écris dans l'entité fournsiseurs
+        ]);
+        }
+
+        return $this->render('fournisseurs/localite.html.twig', [
+            'form' => $form->createView(),
+        ]);
+    }
+
+
+    // fournisseur par Pays
+    //-------------------------------
+    #[Route('/Pays', name: 'pays', methods: ['GET','POST'])]
+    public function pays(Request $request, FournisseursRepository $FournisseursRepo, EntityManagerInterface $entityManager) : Response
+    {
+
+    $form = $this->createForm(FournisseursPaysType::class, null);
+
+    $form->handleRequest($request);
+
+    if ($form->isSubmitted() && $form->isValid()) {
+        $paysSelectionne = $form->get('pays')->getData(); // localite même nom que dans le formulaire builder
+        
+            
+        return $this->render('fournisseurs/pays_resultat.html.twig',[   // le twig ou on affiche les resultats du pays selectionner
+                        
+        'fournisseurs' =>$FournisseursRepo->findBy(['Pays'=> $paysSelectionne]), 
+        // pays meme écris dans l'entité fournsiseurs
+        ]);
+        }
+
+        return $this->render('fournisseurs/pays.html.twig', [
+            'form' => $form->createView(),
+        ]);
+    }
 
 }
