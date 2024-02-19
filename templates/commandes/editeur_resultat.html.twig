@@ -2,12 +2,13 @@
 
 
 {% block body %}
-    <h1 class="text-center"> Liste nom des fournisseurs </h1>
+    <h1 class="text-center"> Liste par editeur </h1>
 
     <table class="border=1 w-75 mx-auto table table-dark table-striped-columns">
         <tr>
             <th> Livre </th>
             <th> Fournisseur </th>
+            <th> Editeur </th>
             <th> Date d'achat </th>
             <th> Prix d'achat </th>
             <th> Nbr d'exemplaires </th>
@@ -18,6 +19,7 @@
             <tr>
                 <td>{{ commande.idlivre.TitreLivre }}</td>
                 <td>{{ commande.Idfournisseur.RaisonSociale }}</td>
+                <td>{{ commande.Idlivre.Editeur }}</td>
                 <td>{{ commande.dateachat }}</td>  
                 <td>{{ commande.prixachat }}</td>  
                 <td>{{ commande.nbrexemplaires }}</td>  

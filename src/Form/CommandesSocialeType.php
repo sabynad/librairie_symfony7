@@ -7,9 +7,9 @@ use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
-use Symfony\Component\Form\Extension\Core\Type\TextType;
 use App\Repository\FournisseursRepository;
 use Doctrine\ORM\EntityManagerInterface;
+use App\Entity\Fournisseurs;
 
 class CommandesSocialeType extends AbstractType
 {
@@ -27,7 +27,8 @@ class CommandesSocialeType extends AbstractType
             ->add('raisonsociale', ChoiceType::class, [
                 'label' => 'Raison sociale',
                 'choices' => $this->getRaisonSociale(),
-                'choice_value' => $this->getRaisonSociale(),
+                // 'choice_label' => 'raisonsociale',
+                // 'choice_value' => 'id',
             ]);
     }
 
@@ -38,39 +39,26 @@ class CommandesSocialeType extends AbstractType
         ]);
     }
 
+
     private function getRaisonSociale()
     {
-        // Exemple : exécuter une requête SQL
-        $query = $this->entityManager->createQuery('SELECT c     
-        FROM App\Entity\Commander c
-        JOIN App\Entity\Fournisseurs f 
-        ');
-        $commandes = $query->getResult(); 
+        $fournisseurs = $this->entityManager->getRepository(Fournisseurs::class)->findAll();
 
-
-        $raisonSociale = [];
-        foreach ($commandes as $commande) {
-        $fournisseur = $commande->getIdFournisseur();
-        $raisonSociale[$fournisseur->getRaisonSociale()] = $fournisseur->getRaisonSociale();
-        }
-        return $raisonSociale;
+        return $fournisseurs;
     }
 
-    private function getIdFournisseur(){
-        $query = $this->entityManager->createQuery('SELECT c     
-        FROM App\Entity\Commander c
-        JOIN App\Entity\Fournisseurs f 
-        ');
-        $commandes = $query->getResult(); 
+    // private function getRaisonSociale(): array
+    // {
+    //     $query = $this->entityManager->createQuery('
+    //         SELECT f
+    //         FROM App\Entity\Fournisseurs f
+    //     ');
+    //     $fournisseurs = $query->getResult(); 
 
-
-        $idFournisseur = [];
-        foreach ($commandes as $commande) {
-        $fournisseur = $commande->getIdFournisseur();
-        $idFournisseur[$fournisseur->getId()] = $fournisseur->getId();
-        }
-        return $idFournisseur;
-
-    }
-
+    //     $raisonSociale = [];
+    //     foreach ($fournisseurs as $fournisseur) {
+    //         $raisonSociale[$fournisseur->getRaisonSociale()] = $fournisseur->getRaisonSociale();
+    //     }
+    //     return $raisonSociale;
+    // }
 }

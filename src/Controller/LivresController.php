@@ -101,35 +101,6 @@ class LivresController extends AbstractController
 
     // Selection livre par titre
     // --------------------------
-
-
-    // #[Route('/livrespartitre', name: 'livres_par_titre', methods: ['GET', 'POST'])]
-    // public function livres_par_titre(Request $request, LivresRepository $livresRepository, EntityManagerInterface $entityManager): Response
-    // {
-        // $livres = $livresRepository->findAll();
-        // $form = $this->createFormBuilder()
-        //         ->add('Titre', ChoiceType::class, [
-        //             'choices' => $livres, 
-        //             'choice_label' => 'titreLivre',
-        //             'choice_value' => 'id',
-        //             'placeholder' => 'Choisir un titre', 
-        //             'required' => false, 
-        //         ])
-        //         ->getForm();
-        // $form->handleRequest($request);
-                
-        // if ($form->isSubmitted() && $form->isValid()) {
-        //     $livreSelection = $form->get('Titre')->getData();
-        //     $livreId = $livreSelection->getId();
-        //     return $this->render('livres/select_livre_titre.html.twig', [
-        //         'livre' => $livresRepository->find($livreId),
-        //     ]);
-        // }
-        // return $this->render('livres/resultat_livre_titre.html.twig', [
-        //     'form' => $form->createView(),
-        // ]);
-
-
         #[Route('/livres/titre', name: 'livres_Titre', methods: ['GET','POST'])]
             public function form_livre_Titre(Request $request, LivresRepository $LivresRepo, EntityManagerInterface $entityManager) : Response
         {

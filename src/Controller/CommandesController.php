@@ -11,6 +11,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Doctrine\ORM\EntityManagerInterface;
 use App\Form\CommandesType;
 use App\Form\CommandesSocialeType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 
 
 #[Route('/commandes')]
@@ -28,7 +29,7 @@ class CommandesController extends AbstractController
 
 
     // Ajout commande
-    //-----------------
+    //________________
 
     #[Route('/ajout', name: 'ajout_commande', methods:['GET', 'POST'])]
     public function ajout_commande(Request $request, EntityManagerInterface $entityManager,  CommanderRepository $commandesRepository ): Response
@@ -52,7 +53,7 @@ class CommandesController extends AbstractController
 
 
     //Update commande
-    //--------------
+    //________________
     #[Route('/{id}/update', name: 'update_commande',methods:['GET','POST'])]
     public function update_commande(int $id, Request $request, CommanderRepository $commandesRepository, EntityManagerInterface $entityManager): Response
     {
@@ -71,7 +72,7 @@ class CommandesController extends AbstractController
 
 
     //delete commande 
-    //--------------
+    //_________________
     #[Route('/{id}/delete', name: 'delete_commande')]
     public function delete_commande( int $id, EntityManagerInterface $entityManager,  CommanderRepository $commanderRepository): Response
     {
@@ -85,38 +86,124 @@ class CommandesController extends AbstractController
 
 
     //commandes par raison sociale
-    //--------------------------------
-    #[Route('/raisonsociale', name: 'commandes_raison_sociale', methods: ['GET','POST'])]
-    public function commandes_raison_sociale(Request $request,CommanderRepository $CommandesRepo, EntityManagerInterface $entityManager) : Response
-    {
-    $commandesJointures = $CommandesRepo->findAllCommandesWithJointures();
-    $form = $this->createForm(CommandesSocialeType::class, null);
+    //--------------------------------NE MARCHE PAS----------------------
+    // #[Route('/raisonsociale', name: 'commandes_raison_sociale', methods: ['GET','POST'])]
+    // public function commandes_raison_sociale(Request $request,CommanderRepository $CommandesRepo, EntityManagerInterface $entityManager) : Response
+    // {
+    // $commandesJointures = $CommandesRepo->findAllCommandesWithJointures();
+    // $form = $this->createForm(CommandesSocialeType::class, null);
 
-    $form->handleRequest($request);
+    // $form->handleRequest($request);
 
-    if ($form->isSubmitted() && $form->isValid()) {
-        $raisonSocialeSelectionne = $form->get('raisonsociale')->getData(); // raisonsociale même nom que dans le formulaire builder
-        $raisonSocialeChoisie = $raisonSocialeSelectionne->getIdFournisseur();
+    // if ($form->isSubmitted() && $form->isValid()) {
+    //     $raisonSocialeSelectionne = $form->get('raisonsociale')->getData(); // raisonsociale même nom que dans le formulaire builder
+        
+    //     $raisonSocialeChoisie = $raisonSocialeSelectionne->getId();
             
-        return $this->render('commandes/raison_sociale_resultat.html.twig',[   // le twig ou on affiche les resultats du titre selectionner
+    //     return $this->render('commandes/raison_sociale_resultat.html.twig',[   // le twig ou on affiche les resultats du titre selectionner
                         
-        'commandes' => $CommandesRepo->findBy(['Raison_sociale' => $raisonSocialeChoisie]), 
-        // Raison_sociale meme écris dans l'entité fournsiseurs
-        ]);
+    //     'commandes' => $CommandesRepo->findBy(['Id_fournisseur' => $raisonSocialeChoisie]), 
+    //     'formdata' => $raisonSocialeSelectionne,
+    //     // Raison_sociale meme écris dans l'entité fournsiseurs
+    //     ]);
+    //     }
+
+    //     return $this->render('commandes/raison_sociale.html.twig', [
+    //         'form' => $form->createView(),
+    //     ]);
+
+    #[Route('/raisonsociale', name: 'commandes_raison_sociale', methods: ['GET', 'POST'])]
+        public function commandes_raison_sociale(Request $request, CommanderRepository $commanderRepository, EntityManagerInterface $entityManager): Response
+        {
+            $commandes = $commanderRepository->findAllCommandesWithJointures();
+            $form = $this->createFormBuilder()
+                    ->add('Fournisseur', ChoiceType::class, [
+                        'choices' => $commandes, 
+                        'choice_label' => 'Idfournisseur.raisonsociale',
+                        'choice_value' => 'Idfournisseur.id',
+                        'placeholder' => 'Choisir un fournisseur', 
+                        'required' => false, 
+                    ])
+                    ->getForm();
+            $form->handleRequest($request);
+                    
+            if ($form->isSubmitted() && $form->isValid()) {
+                $commandeSelectionne = $form->get('Fournisseur')->getData();
+                $commandeSelectionneFourni = $commandeSelectionne->getIdFournisseur();
+                return $this->render('commandes/raison_sociale_resultat.html.twig', [
+                    'commandes' => $commanderRepository->findBy(['Id_fournisseur' => $commandeSelectionneFourni]),
+                ]);
+            }
+            return $this->render('commandes/raison_sociale.html.twig', [
+                'form' => $form->createView(),
+                'sujetRecherche' => 'fournisseur',
+            ]);
         }
 
-        return $this->render('commandes/raison_sociale.html.twig', [
+
+    //commande par date (methode thierry sans créer un formulaire)
+    //_______________________________________________________________
+
+    #[Route('/Date', name: 'commandes_date', methods: ['GET', 'POST'])]
+    public function commandes_date(Request $request, CommanderRepository $commanderRepository, EntityManagerInterface $entityManager): Response
+    {
+        $commandes = $commanderRepository->findAllCommandesWithJointures();
+        $form = $this->createFormBuilder()
+                ->add('commande', ChoiceType::class, [
+                    'choices' => $commandes, 
+                    'choice_label' => 'id_commande.Date_achat',
+                    'choice_value' => 'id_commande.id',
+                    'placeholder' => 'Choisir une date', 
+                    'required' => false, 
+                ])
+                ->getForm();
+        $form->handleRequest($request);
+                
+        if ($form->isSubmitted() && $form->isValid()) {
+            $commandeSelectionne = $form->get('commande')->getData();
+            $commandeSelectionneDate = $commandeSelectionne->getIdCommande();
+            return $this->render('commandes/date_resultat.html.twig', [
+                'commandes' => $commanderRepository->findBy(['id_commande' => $commandeSelectionneDate]),
+            ]);
+        }
+        return $this->render('commandes/date.html.twig', [
             'form' => $form->createView(),
+            'sujetRecherche' => 'commande',
         ]);
     }
+    
+    
 
-    // hypothèse du problème (Thierry) :
-            // Dans le form, on recupère la raison sociale en value
-            // Mais on lui demande de trouver la raison sociale dans le CommandeRepo, or il n'y a pas de 
-            // raison sociale dans CommandeRepo, il y a l'idfournisseur, mais je n'arrive pas à mettre 
-            // l'id fournisseur en value dans le formulaire
+    //commande par editeur (methode thierry sans créer un formulaire)
+    //_______________________________________________________________
 
-
+    #[Route('/Editeur', name: 'commandes_editeur', methods: ['GET', 'POST'])]
+    public function commandes_editeur(Request $request, CommanderRepository $commanderRepository, EntityManagerInterface $entityManager): Response
+    {
+        $commandes = $commanderRepository->findAllCommandesWithJointures();
+        $form = $this->createFormBuilder()
+                ->add('Livre', ChoiceType::class, [
+                    'choices' => $commandes, 
+                    'choice_label' => 'IdLivre.editeur',
+                    'choice_value' => 'IdLivre.id',
+                    'placeholder' => 'Choisir un editeur', 
+                    'required' => false, 
+                ])
+                ->getForm();
+        $form->handleRequest($request);
+                
+        if ($form->isSubmitted() && $form->isValid()) {
+            $commandeSelectionne = $form->get('Livre')->getData();
+            $commandeSelectionneLivre = $commandeSelectionne->getIdLivre();
+            return $this->render('commandes/editeur_resultat.html.twig', [
+                'commandes' => $commanderRepository->findBy(['Id_Livre' => $commandeSelectionneLivre]),
+            ]);
+        }
+        return $this->render('commandes/editeur.html.twig', [
+            'form' => $form->createView(),
+            'sujetRecherche' => 'Livre',
+        ]);
+    }
 
 
 }
