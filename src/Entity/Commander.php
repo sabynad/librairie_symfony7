@@ -4,6 +4,7 @@ namespace App\Entity;
 
 use App\Repository\CommanderRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\DBAL\Types\Types;
 
 #[ORM\Entity(repositoryClass: CommanderRepository::class)]
 class Commander
@@ -21,8 +22,8 @@ class Commander
     #[ORM\JoinColumn(nullable: false,name:"Id_fournisseur", referencedColumnName:"Id_fournisseur",)]
     private ?Fournisseurs $Id_fournisseur = null;
 
-    #[ORM\Column(length: 50)]
-    private ?string $Date_achat = null;
+    #[ORM\Column(type: Types::DATE_IMMUTABLE)]
+    private ?\DateTimeInterface $Date_achat = null;
 
     #[ORM\Column(length: 50)]
     private ?string $Prix_achat = null;
@@ -63,12 +64,12 @@ class Commander
         return $this;
     }
 
-    public function getDateAchat(): ?string
+    public function getDateAchat(): ?\DateTimeInterface
     {
         return $this->Date_achat;
     }
 
-    public function setDateAchat(string $Date_achat): static
+    public function setDateAchat(\DateTimeInterface $Date_achat): static
     {
         
         $this->Date_achat = $Date_achat;

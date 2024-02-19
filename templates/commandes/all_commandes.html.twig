@@ -22,7 +22,7 @@
             <tr>
                 <td>{{ commande.idlivre.TitreLivre }}</td>
                 <td>{{ commande.idfournisseur.RaisonSociale }}</td>
-                <td>{{ commande.dateachat }}</td>  
+                <td>{{ commande.dateachat |date('Y-m-d') }}</td>  
                 <td>{{ commande.prixachat }}</td>  
                 <td>{{ commande.nbrexemplaires }}</td>  
                 {# <td>{{ commande.idutilisateur }}</td>   #}

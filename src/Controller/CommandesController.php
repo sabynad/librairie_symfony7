@@ -144,15 +144,23 @@ class CommandesController extends AbstractController
     //commande par date (methode thierry sans créer un formulaire)
     //_______________________________________________________________
 
-    #[Route('/Date', name: 'commandes_date', methods: ['GET', 'POST'])]
+    #[Route('/pardate', name: 'commandes_date', methods: ['GET', 'POST'])]
     public function commandes_date(Request $request, CommanderRepository $commanderRepository, EntityManagerInterface $entityManager): Response
     {
-        $commandes = $commanderRepository->findAllCommandesWithJointures();
+        $commandes = $commanderRepository->findAll();
+
+        $choices=[];
+
+        foreach ($commandes as $commande) {
+            $dateAchat = $commande->getDateAchat();
+            $choices[$dateAchat->format('d-m-Y')] =$dateAchat;  
+        }
+
         $form = $this->createFormBuilder()
                 ->add('commande', ChoiceType::class, [
-                    'choices' => $commandes, 
-                    'choice_label' => 'id_commande.Date_achat',
-                    'choice_value' => 'id_commande.id',
+                    'choices' => $choices, 
+                    // 'choice_label' => 'id_commande.Date_achat',
+                    // 'choice_value' => 'id_commande.id',
                     'placeholder' => 'Choisir une date', 
                     'required' => false, 
                 ])
@@ -161,23 +169,22 @@ class CommandesController extends AbstractController
                 
         if ($form->isSubmitted() && $form->isValid()) {
             $commandeSelectionne = $form->get('commande')->getData();
-            $commandeSelectionneDate = $commandeSelectionne->getIdCommande();
+            // $commandeSelectionneDate = new \DateTimeImmutable ($commandeSelectionne);
             return $this->render('commandes/date_resultat.html.twig', [
-                'commandes' => $commanderRepository->findBy(['id_commande' => $commandeSelectionneDate]),
+                'commandes' => $commanderRepository->findBy(['Date_achat' => $commandeSelectionne]),
             ]);
         }
         return $this->render('commandes/date.html.twig', [
             'form' => $form->createView(),
-            'sujetRecherche' => 'commande',
+            'sujetRecherche' => 'date',
         ]);
-    }
     
-    
+    } 
 
     //commande par editeur (methode thierry sans créer un formulaire)
     //_______________________________________________________________
 
-    #[Route('/Editeur', name: 'commandes_editeur', methods: ['GET', 'POST'])]
+    #[Route('/editeur', name: 'commandes_editeur', methods: ['GET', 'POST'])]
     public function commandes_editeur(Request $request, CommanderRepository $commanderRepository, EntityManagerInterface $entityManager): Response
     {
         $commandes = $commanderRepository->findAllCommandesWithJointures();
