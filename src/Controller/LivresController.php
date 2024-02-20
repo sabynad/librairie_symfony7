@@ -20,10 +20,10 @@ class LivresController extends AbstractController
     //afficher tout les livres
     //-------------------------
         #[Route('/livres', name: 'app_livres',methods:['GET'])]
-        public function index(LivresRepository $livresRepository): Response
+        public function index(LivresRepository $livresRepository): Response  
         {
             return $this->render('livres/all_livres.html.twig', [
-                    'livres'=>$livresRepository->findAll(),
+                    'livres'=>$livresRepository->findAll(),    // récupère tout les livres sur l'objet $livresRepository
                 ]);
         }
 
@@ -46,18 +46,18 @@ class LivresController extends AbstractController
         #[Route('/livres{id}/update', name: 'update_livre',methods:['GET','POST'])]
         public function edit_livre(int $id, Request $request, LivresRepository $livresRepository, EntityManagerInterface $entityManager): Response
         {
-        $form= $this-> createForm(LivresType::class, $livresRepository->find($id));
-        $form->handleRequest($request);
-        if ($form->isSubmitted() && $form->isValid()) {
-            $entityManager->flush();
+            $form= $this-> createForm(LivresType::class, $livresRepository->find($id));
+            $form->handleRequest($request);
+            if ($form->isSubmitted() && $form->isValid()) {
+                $entityManager->flush();
 
-        return $this->redirectToRoute('app_livres',[],
-        Response::HTTP_SEE_OTHER);
+            return $this->redirectToRoute('app_livres',[],
+            Response::HTTP_SEE_OTHER);
+            }
+            return $this->render('livres/update_livre.html.twig', [
+            'form'=> $form, 'livre'=> $livresRepository->findAll(),
+            ]);
         }
-        return $this->render('livres/update_livre.html.twig', [
-        'form'=> $form, 'livre'=> $livresRepository->findAll(),
-        ]);
-    }
 
 
     //Ajout livre

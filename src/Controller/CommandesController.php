@@ -115,6 +115,10 @@ class CommandesController extends AbstractController
     #[Route('/raisonsociale', name: 'commandes_raison_sociale', methods: ['GET', 'POST'])]
         public function commandes_raison_sociale(Request $request, CommanderRepository $commanderRepository, EntityManagerInterface $entityManager): Response
         {
+
+
+
+
             $commandes = $commanderRepository->findAllCommandesWithJointures();
             $form = $this->createFormBuilder()
                     ->add('Fournisseur', ChoiceType::class, [
